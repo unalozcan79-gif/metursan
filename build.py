@@ -29,7 +29,8 @@ BASEP = []
 counters = {}
 for (slug, cat, name, short, feats, uses, about, imgs, yt) in P:
     counters[cat] = counters.get(cat, 0) + 1
-    BASEP.append(dict(slug=slug, cat=cat, imgs=imgs, yt=yt, code=f"MT-{CAT[cat]['code']}-{counters[cat]:02d}", ym=max(i[:7] for i in imgs),
+    imgs = local_imgs(slug) or imgs
+    BASEP.append(dict(slug=slug, cat=cat, imgs=imgs, yt=yt, code=f"MT-{CAT[cat]['code']}-{counters[cat]:02d}", ym=max((i[:7] for i in imgs if not i.startswith("/")), default="2026/11"),
                       tr=(name, short, feats, uses, about)))
 for c in CATEGORIES:
     c["items"] = [p for p in BASEP if p["cat"] == c["slug"]]
@@ -43,7 +44,17 @@ def pt(p, L):  # ürün metni
     return p["tr"] if L == "tr" else M[L].PRODS[p["slug"]]
 
 def img(path, w=800):
-    return "https://wsrv.nl/?url=" + quote(UP + path, safe="") + f"&w={w}&output=webp&q=78"
+    src = D + path if path.startswith("/") else UP + path   # "/static/img/..." = kendi deponuzdaki fotoğraf
+    return "https://wsrv.nl/?url=" + quote(src, safe="") + f"&w={w}&output=webp&q=82"
+
+# Kendi fotoğraflarınız: static/img/<urun-slug>/ klasörüne konan .jpg/.jpeg/.png/.webp dosyaları
+# (ör. Photoroom çıktıları) huzurpano.com görsellerinin yerine, dosya adı sırasıyla kullanılır.
+LOCAL_IMG = os.path.join(BASE, "static", "img")
+def local_imgs(slug):
+    d = os.path.join(LOCAL_IMG, slug)
+    if not os.path.isdir(d): return None
+    fs = sorted(f for f in os.listdir(d) if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")))
+    return [f"/static/img/{slug}/{quote(f)}" for f in fs] or None
 def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
 import hashlib
