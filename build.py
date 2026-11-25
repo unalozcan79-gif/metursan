@@ -6,7 +6,7 @@ python3 build.py --files  -> dist_preview/ (…/index.html linkleri, dosya öniz
 import json, os, re, shutil, sys, html, importlib
 from urllib.parse import quote
 from datetime import date
-from data import SITE, CATEGORIES, P
+from data import SITE, CATEGORIES, P, SOCIAL
 
 PRETTY = "--files" not in sys.argv
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +92,7 @@ def org_ld(L):
             "url": D + "/", "logo": D + "/static/logo/metursan-logo-512.png", "foundingDate": SITE["founded"], "email": SITE["email"], "telephone": SITE["phone1"],
             "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "postalCode": SITE["postal"], "addressLocality": "Sancaktepe", "addressRegion": "İstanbul", "addressCountry": "TR"},
             "contactPoint": [{"@type": "ContactPoint", "telephone": SITE["phone1"], "contactType": "sales", "availableLanguage": ["tr", "en", "de", "fr", "ar"]}],
-            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/", "https://www.instagram.com/huzurpano1/", "https://www.facebook.com/huzurpanometal"]}
+            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/"] + [u for _, _, u in SOCIAL]}
 
 def ld(o): return '<script type="application/ld+json">' + json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "</script>"
 def crumbs_ld(items): return ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]})
@@ -156,7 +156,7 @@ def foot(g):
 <div class="fgrid">
  <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
- <div class="social"><a href="https://www.instagram.com/huzurpano1/" aria-label="Instagram" rel="noopener" target="_blank">IG</a><a href="https://www.facebook.com/huzurpanometal" aria-label="Facebook" rel="noopener" target="_blank">FB</a><a href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" rel="noopener" target="_blank">WA</a></div></div>
+ <div class="social">{"".join(f'<a href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{t}</a>' for n, t, u in SOCIAL)}<a href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">WA</a></div></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
  <div><h2>{e(T['nav_services'])}</h2><ul>{srv}</ul></div>
  <div><h2>{e(T['nav_contact'])}</h2><ul><li><a href="tel:{SITE['tel']}" dir="ltr">{SITE['phone1']}</a></li><li><a href="https://wa.me/{SITE['whatsapp']}">WhatsApp <span dir="ltr">{SITE['whatsapp_display']}</span></a></li><li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li><li>{e(SITE['street'])}, {SITE['postal']} {e(SITE['city'])}</li><li><a href="{g.h('katalog')}">{e(KAT[g.L]['title'])} (PDF)</a></li><li><a href="{g.A}llms.txt">{e(T['f_llms'])}</a></li></ul></div>

@@ -479,3 +479,12 @@ SERVICES = [
     ("kaynakli-birlestirme", "Kaynaklı Birleştirme", "MIG/MAG ve TIG (argon) kaynakla çelik, paslanmaz ve alüminyum birleştirme."),
     ("statik-boya", "Elektrostatik Toz Boya", "Ön işlem ve fırınlanmış elektrostatik toz boya ile dayanıklı, istenen RAL renginde yüzey."),
 ]
+
+# Sosyal medya (alt kısım + arama motorları için kurum bilgisi)
+SOCIAL = [
+    ("Instagram", "IG", "https://www.instagram.com/huzurpanostore/"),
+    ("Facebook", "FB", "https://www.facebook.com/HuzurPanoStore"),
+    ("YouTube", "YT", "https://www.youtube.com/@huzur_pano"),
+    ("LinkedIn", "in", "https://www.linkedin.com/company/huzurpano"),
+    ("X (Twitter)", "X", "https://twitter.com/huzurpano1"),
+]
