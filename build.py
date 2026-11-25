@@ -57,6 +57,17 @@ def img(path, w=800):
     return "https://wsrv.nl/?url=" + quote(src, safe="") + f"&w={w}&output=webp&q=82"
 
 
+CHAT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.5 14.7L2.2 21.8l5-1.3A9.8 9.8 0 1 0 12 2.2zm0 1.8a8 8 0 1 1-4.2 14.8l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 0 1 12 4zm-3.1 4.2c-.2 0-.5 0-.7.3-.3.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 3 4.7 4.1 2.3.9 2.8.7 3.3.7s1.6-.7 1.8-1.3.2-1.2.2-1.3-.2-.2-.5-.3l-1.7-.8c-.3-.1-.4-.2-.6.1l-.8 1c-.2.2-.3.2-.6.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.3-.4.7-1.2.1-.2 0-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4z"/></svg>'
+SOCIAL_SVG = {
+ 'Instagram': '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></svg>',
+ 'Facebook': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.4H8v3h2.6V21z"/></svg>',
+ 'X': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.8 3h3l-6.6 7.6L22 21h-6.1l-4.8-6.3L5.6 21h-3l7.1-8.1L2.3 3h6.2l4.3 5.7zm-1 16.2h1.7L7.3 4.7H5.5z"/></svg>',
+ 'YouTube': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15.1V8.9l5.2 3.1z"/></svg>',
+ 'LinkedIn': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg>',
+ 'WhatsApp': CHAT,
+}
+SOCIAL_SVG = {k: v.replace('<svg viewBox="0 0 24 24"', '<svg width="18" height="18" viewBox="0 0 24 24"', 1) for k, v in SOCIAL_SVG.items()}
+
 def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
 import hashlib
@@ -92,7 +103,7 @@ def org_ld(L):
             "url": D + "/", "logo": D + "/static/logo/metursan-logo-512.png", "foundingDate": SITE["founded"], "email": SITE["email"], "telephone": SITE["phone1"],
             "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "postalCode": SITE["postal"], "addressLocality": "Sancaktepe", "addressRegion": "İstanbul", "addressCountry": "TR"},
             "contactPoint": [{"@type": "ContactPoint", "telephone": SITE["phone1"], "contactType": "sales", "availableLanguage": ["tr", "en", "de", "fr", "ar"]}],
-            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/"] + [u for _, _, u in SOCIAL]}
+            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/"] + [u for _, _, u, _ in SOCIAL]}
 
 def ld(o): return '<script type="application/ld+json">' + json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "</script>"
 def crumbs_ld(items): return ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]})
@@ -156,7 +167,7 @@ def foot(g):
 <div class="fgrid">
  <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
- <div class="social">{"".join(f'<a href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{t}</a>' for n, t, u in SOCIAL)}<a href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">WA</a></div></div>
+ <div class="social">{"".join(f'<a class="s-{t}" href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{SOCIAL_SVG[k]}</a>' for n, t, u, k in SOCIAL)}<a class="s-whatsapp" href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">{SOCIAL_SVG['WhatsApp']}</a></div></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
  <div><h2>{e(T['nav_services'])}</h2><ul>{srv}</ul></div>
  <div><h2>{e(T['nav_contact'])}</h2><ul><li><a href="tel:{SITE['tel']}" dir="ltr">{SITE['phone1']}</a></li><li><a href="https://wa.me/{SITE['whatsapp']}">WhatsApp <span dir="ltr">{SITE['whatsapp_display']}</span></a></li><li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li><li>{e(SITE['street'])}, {SITE['postal']} {e(SITE['city'])}</li><li><a href="{g.h('katalog')}">{e(KAT[g.L]['title'])} (PDF)</a></li><li><a href="{g.A}llms.txt">{e(T['f_llms'])}</a></li></ul></div>

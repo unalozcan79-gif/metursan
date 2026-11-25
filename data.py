@@ -482,9 +482,9 @@ SERVICES = [
 
 # Sosyal medya (alt kısım + arama motorları için kurum bilgisi)
 SOCIAL = [
-    ("Instagram", "IG", "https://www.instagram.com/huzurpanostore/"),
-    ("Facebook", "FB", "https://www.facebook.com/HuzurPanoStore"),
-    ("YouTube", "YT", "https://www.youtube.com/@huzur_pano"),
-    ("LinkedIn", "in", "https://www.linkedin.com/company/huzurpano"),
-    ("X (Twitter)", "X", "https://twitter.com/huzurpano1"),
+    ("Instagram", "instagram", "https://www.instagram.com/huzurpanostore/", "Instagram"),
+    ("Facebook", "facebook", "https://www.facebook.com/HuzurPanoStore", "Facebook"),
+    ("YouTube", "youtube", "https://www.youtube.com/@huzur_pano", "YouTube"),
+    ("LinkedIn", "linkedin", "https://www.linkedin.com/company/huzurpano", "LinkedIn"),
+    ("X (Twitter)", "x", "https://twitter.com/huzurpano1", "X"),
 ]
