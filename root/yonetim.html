@@ -4,7 +4,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
 :root{--acc:#ee6510;--ink:#1d1d1f;--mut:#6e6e73;--line:#e3e3e8}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#f5f5f7;color:var(--ink)}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;font-family:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#f5f5f7;color:var(--ink)}
 header{background:#fff;border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0}
 header img{height:30px}header h1{font-size:17px;margin:0 0 0 auto;font-weight:600;color:var(--mut)}
 main{max-width:900px;margin:0 auto;padding:20px}
@@ -47,7 +47,8 @@ $("approved").innerHTML=j.approved.map(r=>card(r,0)).join("")||'<p class="empty"
 $("login").onsubmit=e=>{e.preventDefault();KEY=$("key").value.trim();load()};
 $("reload").onclick=load;$("out").onclick=()=>{KEY="";try{sessionStorage.removeItem("mk")}catch(e){}location.reload()};
 document.addEventListener("click",e=>{const b=e.target.closest("button[data-a]");if(!b)return;
-if(b.dataset.a!=="approve"&&!confirm("Bu yorum silinsin mi?"))return;b.disabled=true;
+if(b.dataset.a!=="approve"&&!b.dataset.sure){b.dataset.sure="1";b.dataset.t=b.textContent;b.textContent="Emin misiniz? Tekrar basın";
+setTimeout(()=>{if(b.isConnected){delete b.dataset.sure;b.textContent=b.dataset.t}},4000);return}b.disabled=true;b.textContent="İşleniyor…";
 api("POST",{action:b.dataset.a,id:b.dataset.id,pid:b.dataset.pid}).then(load)});
 if(KEY)load();
 })();
