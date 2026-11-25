@@ -61,6 +61,7 @@ def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
 import hashlib
 from katalog import KAT, build as build_catalog
+from yorum import section as review_section, js_strings as review_js
 def _v(f): return hashlib.md5(open(os.path.join(BASE, "static", f), "rb").read()).hexdigest()[:8]
 VER = {"css": _v("style.css"), "js": _v("app.js"), "kcss": _v("katalog.css")}
 
@@ -106,7 +107,7 @@ def head(g, title, desc, extra="", og_img=None, cur="", noindex=False):
     nav = [("urunler", T["nav_products"]), ("hizmetler", T["nav_services"]), ("hakkimizda", T["nav_about"]), ("iletisim", T["nav_contact"])]
     lis = "".join(f'<li><a href="{g.h(s)}"{" aria-current=page" if cur == s else ""}>{e(t)}</a></li>' for s, t in nav)
     langs = "".join(f'<a href="{g.other(l)}" hreflang="{l}" lang="{l}"{" aria-current=true" if l == g.L else ""}>{e(M[l].NAME)}</a>' for l in LANGS)
-    js = dict(T["js"], lang=g.L, rtl=M[g.L].DIR == "rtl")
+    js = dict(T["js"], lang=g.L, rtl=M[g.L].DIR == "rtl", rv=review_js(g.L))
     font = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap">' if g.L == "ar" else ""
     return f"""<!doctype html>
 <html lang="{g.L}" dir="{M[g.L].DIR}"><head>
@@ -300,6 +301,7 @@ def page_prod(L, p):
 <div class="pd-more"><div class="pd-about"><h2 class="pd-h" style="margin-top:0">{e(T['about_h'])}</h2><p>{e(about)}</p><p>{e(F(T['about2'], **kw))}</p>{vid}</div>
 <aside class="pd-uses"><h3>{e(T['uses'])}</h3><ul>{ul}</ul><h3 style="margin-top:22px">{e(T['tech'])}</h3><ul>{tl}</ul></aside></div>
 </div>
+{review_section(L, p['slug'], name)}
 <section class="st-sec st-faq"><div class="wrap"><h2 class="st-h2"><em>{e(T['faq_t'])}</em> {e(name)}</h2>{faq_html(qa)}</div></section>
 {sec(T['same_cat'], row("".join(card(g, x) for x in rel[:12])), link=(g.h(c['slug']), T['see_all']))}
 </div>"""
@@ -405,7 +407,7 @@ def machine_files():
     sm.append("</urlset>")
     write("sitemap.xml", "\n".join(sm))
     bots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-User", "Claude-SearchBot", "PerplexityBot", "Google-Extended", "Applebot-Extended", "Bingbot", "Googlebot"]
-    write("robots.txt", "User-agent: *\nAllow: /\n\n" + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots) + f"Sitemap: {D}/sitemap.xml\n# LLM: {D}/llms.txt\n")
+    write("robots.txt", "User-agent: *\nAllow: /\nDisallow: /yonetim\nDisallow: /api/\n\n" + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots) + f"Sitemap: {D}/sitemap.xml\n# LLM: {D}/llms.txt\n")
     write("_headers", "/static/*\n  Cache-Control: public, max-age=31536000, immutable\n/*.json\n  Access-Control-Allow-Origin: *\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n")
 
 if __name__ == "__main__":
