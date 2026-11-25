@@ -30,6 +30,8 @@ KAT = {
             hint="نصيحة: في نافذة الطباعة اختر «حفظ بتنسيق PDF»، والورق A4، والهوامش «بلا»، وفعّل «رسومات الخلفية».", lang="اللغة", meta="كتالوج ميتورسان: {n} طرازًا في {c} فئات. خزائن ولوحات وأكشاك معدنية حسب المقاس. نزّله بصيغة PDF."),
 }
 PER = 2  # sayfa başına ürün
+PDF = {"tr": "Metursan-Urun-Katalogu-2026-TR", "en": "Metursan-Product-Catalogue-2026-EN", "de": "Metursan-Produktkatalog-2026-DE",
+       "fr": "Metursan-Catalogue-Produits-2026-FR", "ar": "Metursan-Catalogue-2026-AR"}
 
 def build(L, X):
     """X: build.py bağlamı (M, SITE, CATEGORIES, D, LANGS, ct, pt, img, wa, write, MARK, ld, org_ld, VER)"""
@@ -95,6 +97,10 @@ def build(L, X):
             else "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap")
     title = f'Metursan · {K["title"]} 2026'
     desc = K["meta"].format(n=n_all, c=len(CATS))
+    import os, hashlib
+    pf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "katalog", PDF[L] + ".pdf")
+    pdf_link = (f'<a class="dl" href="../../static/katalog/{PDF[L]}.pdf?v={hashlib.md5(open(pf, "rb").read()).hexdigest()[:8]}" download>{e(K["pdf"].split(" / ")[0])} ↓ <small>{os.path.getsize(pf) // 1048576 + 1} MB</small></a>'
+                if os.path.exists(pf) else "")
     html = f'''<!doctype html><html lang="{L}" dir="{m.DIR}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(title)}</title><meta name="description" content="{e(desc)}"><link rel="canonical" href="{D}/{L}/katalog/">{alts}
 <meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:image" content="{D}/static/logo/metursan-og.png">
@@ -104,7 +110,7 @@ def build(L, X):
 {X["ld"]({"@context": "https://schema.org", "@type": "CreativeWork", "name": title, "inLanguage": L, "url": f"{D}/{L}/katalog/", "about": f"{D}/{L}/products.json", "publisher": {"@type": "Organization", "name": "Metursan", "url": D + "/"}})}
 </head><body>
 <div class="bar"><a href="../">← {e(K["back"])}</a><details class="kl"><summary>{e(K["lang"])}: {L.upper()}</summary><div>{langs}</div></details>
-<button id="pdf" type="button">{e(K["pdf"])}</button><p class="hint">{e(K["hint"])}</p></div>
+{pdf_link}<button id="pdf" type="button" class="sec">{e(K["pdf"].split(" / ")[-1])}</button><p class="hint">{e(K["hint"])}</p></div>
 <div class="book">{"".join(pages)}</div>
 <script>
 (function(){{var b=document.getElementById('pdf'),t=b.textContent;

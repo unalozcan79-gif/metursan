@@ -11,6 +11,10 @@ img{display:block;max-width:100%}
 .bar>a{font-weight:600}
 .bar button{margin-inline-start:auto;background:var(--acc);color:#fff;border:0;border-radius:999px;padding:10px 20px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .bar button:hover{background:var(--acc-d)}
+.bar .dl{margin-inline-start:auto;background:var(--acc);color:#fff;border-radius:999px;padding:10px 20px;font-weight:600;font-size:14px}
+.bar .dl:hover{background:var(--acc-d)}.bar .dl small{opacity:.8;font-weight:500;margin-inline-start:4px}
+.bar .dl+button.sec{margin-inline-start:0;background:#fff;color:var(--ink);border:1px solid var(--line)}
+.bar .dl+button.sec:hover{background:var(--soft)}
 .bar .hint{flex-basis:100%;color:var(--mut);font-size:12px}
 .kl{position:relative}.kl summary{cursor:pointer;list-style:none;padding:6px 10px;border:1px solid var(--line);border-radius:999px}
 .kl div{position:absolute;top:110%;inset-inline-start:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;display:grid;min-width:140px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
