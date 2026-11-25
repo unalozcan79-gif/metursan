@@ -70,8 +70,8 @@ SOCIAL_SVG = {k: v.replace('<svg viewBox="0 0 24 24"', '<svg width="18" height="
 
 def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
-import hashlib
-from katalog import KAT, build as build_catalog
+import hashlib, re
+from katalog import KAT, PDF as KPDF
 from yorum import section as review_section, js_strings as review_js
 def _v(f): return hashlib.md5(open(os.path.join(BASE, "static", f), "rb").read()).hexdigest()[:8]
 VER = {"css": _v("style.css"), "js": _v("app.js"), "kcss": _v("katalog.css")}
@@ -353,6 +353,31 @@ def pages_static(L):
     simple(L, "hakkimizda", T["about_t"], T["m_about_d"], about, "hakkimizda")
     simple(L, "iletisim", T["contact_t"], F(T["m_contact_d"], **CTX), contact, "iletisim")
 
+def page_catalog(L):
+    """Katalog sayfası (reyonfix düzeni): kapak, indirme düğmeleri, iç sayfalardan örnekler"""
+    g = Pg(L, "katalog"); T = g.T; K = KAT[L]
+    navcat = {"tr": "Katalog", "en": "Catalogue", "de": "Katalog", "fr": "Catalogue", "ar": "الكتالوج"}[L]
+    pf = os.path.join(BASE, "static", "katalog", KPDF[L] + ".pdf")
+    raw = open(pf, "rb").read()
+    pages = len(re.findall(rb"/Type\s*/Page[^s]", raw))
+    mb = f"{len(raw) / 1048576:.1f}".replace(".", "," if L in ("tr", "de", "fr") else ".")
+    url = f"{g.A}static/katalog/{KPDF[L]}.pdf?v=" + hashlib.md5(raw).hexdigest()[:8]
+    title = f"{K['title']} 2026"
+    others = " · ".join(f'<a href="{g.other(l)}" hreflang="{l}" lang="{l}">{e(M[l].NAME)}</a>' for l in LANGS if l != L)
+    thumbs = "".join(f'<a href="{url}" target="_blank" rel="noopener"><img src="{g.A}static/katalog/{L}-{i}.webp" alt="{e(title)} · {e(K["page"])} {p}" loading="lazy" width="620" height="878"></a>'
+                     for i, p in [(1, 2), (2, 3), (3, 10)])
+    body = f"""<div class="st">{crumbs(g, [(T['home'], g.h()), (navcat, '')])}
+<div class="wrap kat"><a class="kat-cover" href="{url}" target="_blank" rel="noopener"><img src="{g.A}static/katalog/{L}-0.webp" alt="{e(title)}" width="900" height="1274" fetchpriority="high"></a>
+<div class="kat-tx"><p class="pd-eb">{e(navcat)} · PDF · {pages} {e(K['pages_n'])} · <span dir="ltr">{mb} MB</span></p><h1>{e(title)}</h1><p class="pd-sum">{e(K['page_lead'].format(n=len(BASEP)))}</p>
+<div class="pd-btns"><a class="btn btn-p" href="{url}" download>{e(K['dl'])} ↓</a><a class="btn btn-s" href="{url}" target="_blank" rel="noopener">{e(K['open'])}</a></div>
+<p class="kat-note">{e(K['others'])}: {others}</p></div></div>
+<section class="st-sec"><div class="wrap"><h2 class="st-h2"><em>{e(K['inside'])}</em></h2><div class="kat-pages">{thumbs}</div></div></section>
+{why_row(g)}</div>"""
+    extra = crumbs_ld([(T["home"], g.url()), (navcat, g.url("katalog"))]) + ld({"@context": "https://schema.org", "@type": "DigitalDocument", "name": title, "inLanguage": L,
+             "encodingFormat": "application/pdf", "url": D + f"/static/katalog/{KPDF[L]}.pdf", "numberOfPages": pages, "publisher": {"@id": D + "/#org"}})
+    write(f"{L}/katalog/index.html", head(g, f"{title} · Metursan", K["meta"].format(n=len(BASEP), c=len(CATEGORIES)), extra,
+                                            og_img=f"{D}/static/katalog/{L}-0.webp", cur="katalog") + body + foot(g))
+
 # ---------- kök sayfalar ----------
 def root_files():
     # dil seçici + tarayıcı diline göre yönlendirme
@@ -433,7 +458,7 @@ if __name__ == "__main__":
         page_home(L); page_all(L); pages_static(L)
         for c in CATEGORIES: page_cat(L, c)
         for p in BASEP: page_prod(L, p)
-        build_catalog(L, dict(M=M, SITE=SITE, CATEGORIES=CATEGORIES, D=D, LANGS=LANGS, ct=ct, pt=pt, img=img, write=write, MARK=LOGO, ld=ld, VER=VER))
+        page_catalog(L)
     root_files(); machine_files()
     n = sum(len(f) for _, _, f in os.walk(OUT))
     print(f"OK: {len(LANGS)} dil × {len(BASEP)} ürün, {n} dosya -> {OUT} (pretty={PRETTY})")

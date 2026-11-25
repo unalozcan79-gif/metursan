@@ -361,3 +361,13 @@ footer .langs{display:flex;gap:6px;flex-wrap:wrap}
 .social a.s-whatsapp:hover,.social a.s-whatsapp:focus-visible{background:#25d366}
 .social svg path:not([fill]){fill:currentColor}
 .nav nav a{white-space:nowrap}
+/* katalog sayfası */
+.kat{display:grid;grid-template-columns:minmax(0,440px) 1fr;gap:clamp(28px,5vw,72px);align-items:center;padding-top:12px;padding-bottom:20px}
+.kat-cover img{width:100%;height:auto;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.18);transition:transform .4s}
+.kat-cover:hover img{transform:translateY(-4px)}
+.kat-tx h1{font-size:clamp(34px,4vw,56px);font-weight:600;letter-spacing:-.03em;line-height:1.06}
+.kat-note{font-size:14px;color:var(--mute);margin-top:22px}
+.kat-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
+.kat-pages img{width:100%;height:auto;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.1);transition:transform .3s}
+.kat-pages a:hover img{transform:translateY(-3px)}
+@media (max-width:860px){.kat{grid-template-columns:1fr}.kat-cover{max-width:420px}.kat-pages{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
