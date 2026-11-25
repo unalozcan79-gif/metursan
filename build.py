@@ -23,6 +23,15 @@ def F(s, **kw):
     return s
 CTX = dict(legal=SITE["legal"], founded=SITE["founded"], wa=SITE["whatsapp_display"], email=SITE["email"], phone=SITE["phone1"])
 
+# Kendi fotoğraflarınız: static/img/<urun-slug>/ klasörüne konan .jpg/.jpeg/.png/.webp dosyaları
+# (ör. Photoroom çıktıları) huzurpano.com görsellerinin yerine, dosya adı sırasıyla kullanılır.
+LOCAL_IMG = os.path.join(BASE, "static", "img")
+def local_imgs(slug):
+    d = os.path.join(LOCAL_IMG, slug)
+    if not os.path.isdir(d): return None
+    fs = sorted(f for f in os.listdir(d) if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")))
+    return [f"/static/img/{slug}/{quote(f)}" for f in fs] or None
+
 # ---------- veri ----------
 CAT = {c["slug"]: c for c in CATEGORIES}
 BASEP = []
@@ -47,14 +56,7 @@ def img(path, w=800):
     src = D + path if path.startswith("/") else UP + path   # "/static/img/..." = kendi deponuzdaki fotoğraf
     return "https://wsrv.nl/?url=" + quote(src, safe="") + f"&w={w}&output=webp&q=82"
 
-# Kendi fotoğraflarınız: static/img/<urun-slug>/ klasörüne konan .jpg/.jpeg/.png/.webp dosyaları
-# (ör. Photoroom çıktıları) huzurpano.com görsellerinin yerine, dosya adı sırasıyla kullanılır.
-LOCAL_IMG = os.path.join(BASE, "static", "img")
-def local_imgs(slug):
-    d = os.path.join(LOCAL_IMG, slug)
-    if not os.path.isdir(d): return None
-    fs = sorted(f for f in os.listdir(d) if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")))
-    return [f"/static/img/{slug}/{quote(f)}" for f in fs] or None
+
 def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
 import hashlib
