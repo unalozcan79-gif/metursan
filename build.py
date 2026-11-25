@@ -60,8 +60,9 @@ def img(path, w=800):
 def wa(text): return f"https://wa.me/{SITE['whatsapp']}?text=" + quote(text)
 def tail(): return "" if PRETTY else "index.html"
 import hashlib
+from katalog import KAT, build as build_catalog
 def _v(f): return hashlib.md5(open(os.path.join(BASE, "static", f), "rb").read()).hexdigest()[:8]
-VER = {"css": _v("style.css"), "js": _v("app.js")}
+VER = {"css": _v("style.css"), "js": _v("app.js"), "kcss": _v("katalog.css")}
 
 # ---------- sayfa bağlamı ----------
 class Pg:
@@ -80,14 +81,14 @@ class Pg:
         p = "/".join(x for x in parts if x)
         return f"{D}/{L or s.L}/" + (p + "/" if p else "")
 
-LOGO = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#ee6510"/><path d="M8 23V9l8 8 8-8v14" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+LOGO = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="100" height="100" rx="22.00" fill="#ee6510"/><polygon points="21.00,78.00 21.00,24.00 33.00,24.00 33.00,78.00" fill="#fff"/><polygon points="21.00,24.00 33.00,24.00 50.00,49.00 50.00,66.00" fill="#ffd2b0"/><polygon points="79.00,24.00 67.00,24.00 50.00,49.00 50.00,66.00" fill="#fff"/><polygon points="67.00,24.00 79.00,24.00 79.00,78.00 67.00,78.00" fill="#ffd2b0"/></svg>'
 WA_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.4 8.6 3.4 15.6c0 2.3.6 4.5 1.8 6.4L3 29l7.2-2.2c1.8 1 3.8 1.5 5.8 1.5 7 0 12.6-5.6 12.6-12.6S23 3 16 3zm0 23c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.3 1.3 1.4-4.2-.3-.4a10.4 10.4 0 1 1 8.9 5zm5.7-7.8c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.5 8.5 0 0 1-4.2-3.7c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.5 1.1 2.9 1.2 3.1 2.1 3.2 5.1 4.5c1.9.8 2.6.9 3.6.7.6-.1 1.8-.7 2-1.4s.3-1.3.2-1.4-.3-.2-.6-.3z"/></svg>'
 SPARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>'
 GLOBE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>'
 
 def org_ld(L):
     return {"@context": "https://schema.org", "@type": ["Organization", "LocalBusiness"], "@id": D + "/#org", "name": SITE["brand"], "legalName": SITE["legal"],
-            "url": D + "/", "logo": D + "/favicon.svg", "foundingDate": SITE["founded"], "email": SITE["email"], "telephone": SITE["phone1"],
+            "url": D + "/", "logo": D + "/static/logo/metursan-logo-512.png", "foundingDate": SITE["founded"], "email": SITE["email"], "telephone": SITE["phone1"],
             "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "postalCode": SITE["postal"], "addressLocality": "Sancaktepe", "addressRegion": "İstanbul", "addressCountry": "TR"},
             "contactPoint": [{"@type": "ContactPoint", "telephone": SITE["phone1"], "contactType": "sales", "availableLanguage": ["tr", "en", "de", "fr", "ar"]}],
             "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/", "https://www.instagram.com/huzurpano1/", "https://www.facebook.com/huzurpanometal"]}
@@ -130,7 +131,7 @@ def head(g, title, desc, extra="", og_img=None, cur="", noindex=False):
 <body data-root="{g.R}" data-pretty="{1 if PRETTY else 0}">
 <a class="skip" href="#main">{e(T['skip'])}</a>
 <header class="nav"><div class="wrap">
-<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span dir="ltr">Met<b>ursan</b></span></a>
+<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
 <nav aria-label="Menu"><ul>{lis}</ul></nav>
 <div class="srch" role="search">
  <label class="srch-f"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -152,12 +153,12 @@ def foot(g):
     return f"""</main>
 <footer><div class="wrap">
 <div class="fgrid">
- <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">Met<b>ursan</b></span></a>
+ <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
  <div class="social"><a href="https://www.instagram.com/huzurpano1/" aria-label="Instagram" rel="noopener" target="_blank">IG</a><a href="https://www.facebook.com/huzurpanometal" aria-label="Facebook" rel="noopener" target="_blank">FB</a><a href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" rel="noopener" target="_blank">WA</a></div></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
  <div><h2>{e(T['nav_services'])}</h2><ul>{srv}</ul></div>
- <div><h2>{e(T['nav_contact'])}</h2><ul><li><a href="tel:{SITE['tel']}" dir="ltr">{SITE['phone1']}</a></li><li><a href="https://wa.me/{SITE['whatsapp']}">WhatsApp <span dir="ltr">{SITE['whatsapp_display']}</span></a></li><li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li><li>{e(SITE['street'])}, {SITE['postal']} {e(SITE['city'])}</li><li><a href="{g.A}llms.txt">{e(T['f_llms'])}</a></li></ul></div>
+ <div><h2>{e(T['nav_contact'])}</h2><ul><li><a href="tel:{SITE['tel']}" dir="ltr">{SITE['phone1']}</a></li><li><a href="https://wa.me/{SITE['whatsapp']}">WhatsApp <span dir="ltr">{SITE['whatsapp_display']}</span></a></li><li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li><li>{e(SITE['street'])}, {SITE['postal']} {e(SITE['city'])}</li><li><a href="{g.h('katalog')}">{e(KAT[g.L]['title'])} (PDF)</a></li><li><a href="{g.A}llms.txt">{e(T['f_llms'])}</a></li></ul></div>
 </div>
 <div class="bottom"><span>© {date.today().year} Metursan · {SITE['legal']}. {e(T['f_rights'])}</span><span class="langs">{langs}</span></div>
 <p style="padding-top:10px">{e(T['f_disc'])}</p>
@@ -251,7 +252,7 @@ def page_all(L):
     g = Pg(L, "urunler"); T = g.T
     blocks = "".join(sec((ct(c, L)[0] + ".", f"{len(c['items'])} {T['models']}"), row("".join(card(g, p) for p in c["items"])), link=(g.h(c["slug"]), T["see_all"])) for c in CATEGORIES)
     body = f"""<div class="st">{crumbs(g, [(T['home'], g.h()), (T['all'], '')])}
-<div class="wrap st-top st-top-s"><h1 class="st-h1 ink">{e(T['all'])}</h1><div class="st-intro"><span class="cnt">{len(BASEP)} {e(T['models'])} · {len(CATEGORIES)} {e(T['cats_n'])}</span><p>{e(T['not_found'])}</p><a href="#" data-ai>{e(T['tell_ai'])}</a></div></div>
+<div class="wrap st-top st-top-s"><h1 class="st-h1 ink">{e(T['all'])}</h1><div class="st-intro"><span class="cnt">{len(BASEP)} {e(T['models'])} · {len(CATEGORIES)} {e(T['cats_n'])}</span><p>{e(T['not_found'])}</p><a href="#" data-ai>{e(T['tell_ai'])}</a> <a href="{g.h('katalog')}">{e(KAT[L]['pdf'])} ↓</a></div></div>
 {icons(g)}{blocks}{why_row(g)}</div>"""
     extra = crumbs_ld([(T["home"], g.url()), (T["all"], g.url("urunler"))]) + ld({"@context": "https://schema.org", "@type": "ItemList", "numberOfItems": len(BASEP),
              "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": g.url(p["cat"], p["slug"]), "name": pt(p, L)[0]} for i, p in enumerate(BASEP)]})
@@ -348,7 +349,7 @@ def root_files():
 <link rel="canonical" href="{D}/">{alts}<link rel="alternate" hreflang="x-default" href="{D}/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="static/style.css?v={VER['css']}">{ld(org_ld('tr'))}
 <script>(function(){{try{{if(location.search.indexOf('stay')>-1||sessionStorage.getItem('mt-stay'))return;var L=['tr','en','de','fr','ar'],n=(navigator.languages||[navigator.language||'tr']);for(var i=0;i<n.length;i++){{var c=(n[i]||'').slice(0,2).toLowerCase();if(L.indexOf(c)>-1){{location.replace(c+'/{tail()}');return}}}}location.replace('en/{tail()}')}}catch(e){{}}}})();</script>
-</head><body><main class="chooser"><div><a class="logo" href="./">{LOGO}<span>Met<b>ursan</b></span></a>
+</head><body><main class="chooser"><div><a class="logo" href="./">{LOGO}<span>MET<b>URSAN</b></span></a>
 <p style="margin-top:14px;color:var(--mute)">Metal kabin, pano ve kiosk imalatı · Metal enclosures, panels and kiosks</p>
 <div class="list">{links}</div></div></main></body></html>""")
     # 404 (Türkçe + dil bağlantıları)
@@ -392,7 +393,7 @@ def machine_files():
     Lx += ["", "## Ürünler (TR)", ""] + [f"- [{pt(p, 'tr')[0]}]({D}/tr/{p['cat']}/{p['slug']}/) ({p['code']}): {pt(p, 'tr')[1]}" for p in BASEP]
     write("llms.txt", "\n".join(Lx) + "\n")
     # sitemap (hreflang alternatifleriyle)
-    paths = [""] + ["urunler", "hizmetler", "hakkimizda", "iletisim"] + [c["slug"] for c in CATEGORIES] + [f"{p['cat']}/{p['slug']}" for p in BASEP]
+    paths = [""] + ["urunler", "hizmetler", "hakkimizda", "iletisim", "katalog"] + [c["slug"] for c in CATEGORIES] + [f"{p['cat']}/{p['slug']}" for p in BASEP]
     pim = {f"{p['cat']}/{p['slug']}": p["imgs"][:5] for p in BASEP}
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
     for pth in paths:
@@ -417,6 +418,7 @@ if __name__ == "__main__":
         page_home(L); page_all(L); pages_static(L)
         for c in CATEGORIES: page_cat(L, c)
         for p in BASEP: page_prod(L, p)
+        build_catalog(L, dict(M=M, SITE=SITE, CATEGORIES=CATEGORIES, D=D, LANGS=LANGS, ct=ct, pt=pt, img=img, write=write, MARK=LOGO, ld=ld, VER=VER))
     root_files(); machine_files()
     n = sum(len(f) for _, _, f in os.walk(OUT))
     print(f"OK: {len(LANGS)} dil × {len(BASEP)} ürün, {n} dosya -> {OUT} (pretty={PRETTY})")
