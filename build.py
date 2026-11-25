@@ -410,6 +410,9 @@ if __name__ == "__main__":
     if os.path.exists(OUT): shutil.rmtree(OUT)
     os.makedirs(OUT)
     shutil.copytree(os.path.join(BASE, "static"), os.path.join(OUT, "static"))
+    # root/ klasöründeki dosyalar (arama motoru doğrulama dosyaları vb.) sitenin köküne kopyalanır
+    if os.path.isdir(os.path.join(BASE, "root")):
+        for f in os.listdir(os.path.join(BASE, "root")): shutil.copy(os.path.join(BASE, "root", f), os.path.join(OUT, f))
     for L in LANGS:
         page_home(L); page_all(L); pages_static(L)
         for c in CATEGORIES: page_cat(L, c)
