@@ -303,9 +303,10 @@ def page_prod(L, p):
 <section class="st-sec st-faq"><div class="wrap"><h2 class="st-h2"><em>{e(T['faq_t'])}</em> {e(name)}</h2>{faq_html(qa)}</div></section>
 {sec(T['same_cat'], row("".join(card(g, x) for x in rel[:12])), link=(g.h(c['slug']), T['see_all']))}
 </div>"""
-    prod_ld = {"@context": "https://schema.org", "@type": "Product", "name": name, "description": short + " " + about, "image": [img(x, 1200) for x in p["imgs"]],
-               "category": cname, "url": g.url(c["slug"], p["slug"]), "inLanguage": L, "sku": p["code"], "mpn": p["code"], "brand": {"@type": "Brand", "name": "Metursan"},
-               "manufacturer": {"@id": D + "/#org"}, "countryOfOrigin": "TR",
+    # Fiyat yayımlanmadığı için Product yerine Service (ölçüye özel imalat): Google "ürün snippet'i" hatası üretmez, bilgi korunur
+    prod_ld = {"@context": "https://schema.org", "@type": "Service", "serviceType": cname, "name": name, "description": short + " " + about, "image": [img(x, 1200) for x in p["imgs"]],
+               "category": cname, "url": g.url(c["slug"], p["slug"]), "inLanguage": L, "identifier": p["code"], "brand": {"@type": "Brand", "name": "Metursan"},
+               "provider": {"@id": D + "/#org"}, "areaServed": ["TR", "EU", "Middle East"],
                "additionalProperty": [{"@type": "PropertyValue", "name": T["mtm_b"], "value": "true"}] + [{"@type": "PropertyValue", "name": T["feats"], "value": f} for f in feats] +
                                      [{"@type": "PropertyValue", "name": T["uses"], "value": u} for u in uses]}
     extra = ld(prod_ld) + crumbs_ld([(T["home"], g.url()), (T["nav_products"], g.url("urunler")), (cname, g.url(c["slug"])), (name, g.url(c["slug"], p["slug"]))]) + faq_ld(qa, L)
