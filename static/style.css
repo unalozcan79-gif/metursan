@@ -360,3 +360,4 @@ footer .langs{display:flex;gap:6px;flex-wrap:wrap}
 .social a.s-x:hover,.social a.s-x:focus-visible{background:#000}
 .social a.s-whatsapp:hover,.social a.s-whatsapp:focus-visible{background:#25d366}
 .social svg path:not([fill]){fill:currentColor}
+.nav nav a{white-space:nowrap}

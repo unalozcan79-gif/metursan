@@ -115,7 +115,8 @@ def head(g, title, desc, extra="", og_img=None, cur="", noindex=False):
     og = og_img or img(CATEGORIES[0]["cover"], 1200)
     canon = g.url(g.path) if g.path else g.url()
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{D}/{l}/{g.path + "/" if g.path else ""}">' for l in LANGS) + f'<link rel="alternate" hreflang="x-default" href="{D}/tr/{g.path + "/" if g.path else ""}">'
-    nav = [("urunler", T["nav_products"]), ("hizmetler", T["nav_services"]), ("hakkimizda", T["nav_about"]), ("iletisim", T["nav_contact"])]
+    NAVCAT = {"tr": "Katalog", "en": "Catalogue", "de": "Katalog", "fr": "Catalogue", "ar": "الكتالوج"}
+    nav = [("urunler", T["nav_products"]), ("hizmetler", T["nav_services"]), ("hakkimizda", T["nav_about"]), ("katalog", NAVCAT[g.L]), ("iletisim", T["nav_contact"])]
     lis = "".join(f'<li><a href="{g.h(s)}"{" aria-current=page" if cur == s else ""}>{e(t)}</a></li>' for s, t in nav)
     langs = "".join(f'<a href="{g.other(l)}" hreflang="{l}" lang="{l}"{" aria-current=true" if l == g.L else ""}>{e(M[l].NAME)}</a>' for l in LANGS)
     js = dict(T["js"], lang=g.L, rtl=M[g.L].DIR == "rtl", rv=review_js(g.L))
