@@ -196,7 +196,7 @@ def row(inner, pads=True):
     return f'<div class="st-row">{inner}</div>{pd}'
 
 def icons(g, cur=None):
-    a = "".join(f'<a href="{g.h(c["slug"])}"{" class=cur aria-current=page" if cur == c["slug"] else ""}><span class="ic"><img src="{img(c["cover"], 220)}" alt="" loading="lazy" width="104" height="104"></span><b>{e(ct(c, g.L)[0])}</b></a>' for c in CATEGORIES)
+    a = "".join(f'<a href="{g.h(c["slug"])}#modeller"{" class=cur aria-current=page" if cur == c["slug"] else ""}><span class="ic"><img src="{img(c["cover"], 220)}" alt="" loading="lazy" width="104" height="104"></span><b>{e(ct(c, g.L)[0])}</b></a>' for c in CATEGORIES)
     return f'<nav class="st-icons" aria-label="{e(g.T["nav_products"])}">{a}</nav>'
 
 def sec(t, inner, extra_cls="", link=None):
