@@ -160,7 +160,7 @@ def head(g, title, desc, extra="", og_img=None, cur="", noindex=False):
 <body data-root="{g.R}" data-pretty="{1 if PRETTY else 0}">
 <a class="skip" href="#main">{e(T['skip'])}</a>
 <header class="nav"><div class="wrap">
-<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span dir="ltr">MET<b>UR</b><i>SAN</i></span></a>
+<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span class="lg-t" dir="ltr"><span>MET<b>UR</b><i>SAN</i></span><small>Metal Üretim Sanayi</small></span></a>
 <nav aria-label="Menu"><ul>{lis}</ul></nav>
 <div class="srch" role="search">
  <label class="srch-f"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -182,7 +182,7 @@ def foot(g):
     return f"""</main>
 <footer><div class="wrap">
 <div class="fgrid">
- <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>UR</b><i>SAN</i></span></a>
+ <div><a class="logo" href="{g.h()}">{LOGO}<span class="lg-t" dir="ltr"><span>MET<b>UR</b><i>SAN</i></span><small>Metal Üretim Sanayi</small></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
  <div class="social">{"".join(f'<a class="s-{t}" href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{SOCIAL_SVG[k]}</a>' for n, t, u, k in SOCIAL)}<a class="s-whatsapp" href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">{SOCIAL_SVG['WhatsApp']}</a></div></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
