@@ -3,8 +3,8 @@
 python3 build.py          -> dist/ (temiz linkler, canlı sunucu için)
 python3 build.py --files  -> dist_preview/ (…/index.html linkleri, dosya önizlemesi için)
 """
-import json, os, re, shutil, sys, html, importlib
-from urllib.parse import quote
+import json, os, re, hashlib, shutil, sys, html, importlib
+from urllib.parse import quote, unquote
 from datetime import date
 from data import SITE, CATEGORIES, P, SOCIAL
 
@@ -57,8 +57,18 @@ PHOTO = {"tr": "fotoğraf", "en": "photo", "de": "Foto", "fr": "photo", "ar": "�
 def alt_txt(L, name, short, i=1, n=1):
     """Fotoğraf açıklaması (alt metni): ürün adı + kısa açıklama + sıra, her dilde"""
     return f"{name} – {short.rstrip('.')} · Metursan" + (f" ({PHOTO[L]} {i}/{n})" if n > 1 else "")
+_IV = {}
+def _iv(path):
+    """Kendi fotoğraflarımız için içerik sürümü (önbellek kırıcı)"""
+    if path not in _IV:
+        f = os.path.join(BASE, unquote(path).lstrip("/"))
+        _IV[path] = hashlib.md5(open(f, "rb").read()).hexdigest()[:8] if os.path.exists(f) else ""
+    return _IV[path]
 def img(path, w=800):
     path = IMGMAP.get(path, path)
+    if path.startswith("/static/"):
+        v = _iv(path)
+        return "https://wsrv.nl/?url=" + quote(D + path + (f"?v={v}" if v else ""), safe="") + f"&w={w}&output=webp&q=82"
     src = D + path if path.startswith("/") else UP + path   # "/static/img/..." = kendi deponuzdaki fotoğraf
     return "https://wsrv.nl/?url=" + quote(src, safe="") + f"&w={w}&output=webp&q=82"
 
@@ -271,7 +281,7 @@ def page_all(L):
     g = Pg(L, "urunler"); T = g.T
     blocks = "".join(sec((ct(c, L)[0] + ".", f"{len(c['items'])} {T['models']}"), row("".join(card(g, p) for p in c["items"])), link=(g.h(c["slug"]), T["see_all"])) for c in CATEGORIES)
     body = f"""<div class="st">{crumbs(g, [(T['home'], g.h()), (T['all'], '')])}
-<div class="wrap st-top st-top-s"><h1 class="st-h1 ink">{e(T['all'])}</h1><div class="st-intro"><span class="cnt">{len(BASEP)} {e(T['models'])} · {len(CATEGORIES)} {e(T['cats_n'])}</span><p>{e(T['not_found'])}</p><a href="#" data-ai>{e(T['tell_ai'])}</a> <a href="{g.h('katalog')}">{e(KAT[L]['pdf'])} ↓</a></div></div>
+<div class="wrap st-top st-top-s"><h1 class="st-h1 ink">{e(T['all'])}</h1><div class="st-intro"><span class="cnt">{len(BASEP)} {e(T['models'])} · {len(CATEGORIES)} {e(T['cats_n'])}</span><p>{e(T['not_found'])}</p><a href="#" data-ai>{e(T['tell_ai'])}</a> <a href="{g.h('katalog')}">{e(KAT[L]['dl'])} ↓</a></div></div>
 {icons(g)}{blocks}{why_row(g)}</div>"""
     extra = crumbs_ld([(T["home"], g.url()), (T["all"], g.url("urunler"))]) + ld({"@context": "https://schema.org", "@type": "ItemList", "numberOfItems": len(BASEP),
              "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": g.url(p["cat"], p["slug"]), "name": pt(p, L)[0]} for i, p in enumerate(BASEP)]})
