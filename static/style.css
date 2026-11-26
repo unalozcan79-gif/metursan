@@ -23,7 +23,7 @@ a:hover{text-decoration:underline}
 .logo{display:flex;align-items:center;gap:9px;color:var(--ink);font-weight:800;font-size:19px;letter-spacing:-.02em;font-family:Inter,var(--f)}
 .logo:hover{text-decoration:none}
 .logo svg{width:26px;height:26px}
-.logo b{color:var(--acc);font-weight:800}.logo i{font-style:normal;color:#2e9e5b;font-weight:800}
+.logo b{color:var(--acc);font-weight:800}.logo i{font-style:normal;color:#8a8f96;font-weight:800}
 .nav nav>ul{display:flex;list-style:none;gap:24px;margin-left:auto;font-size:13.5px}
 .nav nav>ul a{color:var(--ink);opacity:.85}
 .nav nav>ul a:hover{opacity:1;text-decoration:none}

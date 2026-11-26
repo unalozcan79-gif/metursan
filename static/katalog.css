@@ -28,7 +28,7 @@ img{display:block;max-width:100%}
 .klogo{display:flex;align-items:center;gap:3.2mm}
 .klogo svg{width:11mm;height:11mm;flex:none}
 .klogo b{display:block;font:800 17pt/1 Inter,Arial,sans-serif;letter-spacing:-.02em}
-.klogo b i{font-style:normal;color:var(--acc)}.klogo b u{text-decoration:none;color:#2e9e5b}.klogo.white b u{color:#4cc27e}
+.klogo b i{font-style:normal;color:var(--acc)}.klogo b u{text-decoration:none;color:#8a8f96}.klogo.white b u{color:#b9bec5}
 .klogo small{display:block;font-size:6.4pt;letter-spacing:.24em;color:var(--mut);font-weight:600;margin-top:1.2mm}
 [dir=rtl] .klogo small{letter-spacing:0;font-size:8pt}
 .klogo.big svg{width:15mm;height:15mm}.klogo.big b{font-size:24pt}
