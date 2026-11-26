@@ -93,7 +93,7 @@ class Pg:
         p = "/".join(x for x in parts if x)
         return f"{D}/{L or s.L}/" + (p + "/" if p else "")
 
-LOGO = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="100" height="100" rx="22.00" fill="#ee6510"/><polygon points="21.00,78.00 21.00,24.00 33.00,24.00 33.00,78.00" fill="#fff"/><polygon points="21.00,24.00 33.00,24.00 50.00,49.00 50.00,66.00" fill="#ffd2b0"/><polygon points="79.00,24.00 67.00,24.00 50.00,49.00 50.00,66.00" fill="#fff"/><polygon points="67.00,24.00 79.00,24.00 79.00,78.00 67.00,78.00" fill="#ffd2b0"/></svg>'
+LOGO = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0.00" y="0.00" width="100.00" height="100.00" rx="22.00" fill="#ee6510"/><rect x="20.00" y="16.00" width="60.00" height="66.00" rx="5.00" fill="#fff"/><polygon points="27.00,24.00 35.00,24.00 50.00,44.00 65.00,24.00 73.00,24.00 73.00,60.00 65.00,60.00 65.00,38.00 50.00,58.00 35.00,38.00 35.00,60.00 27.00,60.00" fill="#ee6510"/><rect x="30.00" y="66.00" width="40.00" height="2.20" rx="1.10" fill="#ee6510"/><rect x="30.00" y="70.20" width="40.00" height="2.20" rx="1.10" fill="#ee6510"/><rect x="30.00" y="74.40" width="40.00" height="2.20" rx="1.10" fill="#ee6510"/><rect x="24.00" y="84.00" width="52.00" height="4.00" rx="2.00" fill="#fff"/></svg>'
 WA_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.4 8.6 3.4 15.6c0 2.3.6 4.5 1.8 6.4L3 29l7.2-2.2c1.8 1 3.8 1.5 5.8 1.5 7 0 12.6-5.6 12.6-12.6S23 3 16 3zm0 23c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.3 1.3 1.4-4.2-.3-.4a10.4 10.4 0 1 1 8.9 5zm5.7-7.8c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.5 8.5 0 0 1-4.2-3.7c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.5 1.1 2.9 1.2 3.1 2.1 3.2 5.1 4.5c1.9.8 2.6.9 3.6.7.6-.1 1.8-.7 2-1.4s.3-1.3.2-1.4-.3-.2-.6-.3z"/></svg>'
 SPARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>'
 GLOBE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>'
@@ -144,7 +144,7 @@ def head(g, title, desc, extra="", og_img=None, cur="", noindex=False):
 <body data-root="{g.R}" data-pretty="{1 if PRETTY else 0}">
 <a class="skip" href="#main">{e(T['skip'])}</a>
 <header class="nav"><div class="wrap">
-<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
+<a class="logo" href="{g.h()}" aria-label="Metursan">{LOGO}<span dir="ltr">MET<b>UR</b><i>SAN</i></span></a>
 <nav aria-label="Menu"><ul>{lis}</ul></nav>
 <div class="srch" role="search">
  <label class="srch-f"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -166,7 +166,7 @@ def foot(g):
     return f"""</main>
 <footer><div class="wrap">
 <div class="fgrid">
- <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>URSAN</b></span></a>
+ <div><a class="logo" href="{g.h()}">{LOGO}<span dir="ltr">MET<b>UR</b><i>SAN</i></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
  <div class="social">{"".join(f'<a class="s-{t}" href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{SOCIAL_SVG[k]}</a>' for n, t, u, k in SOCIAL)}<a class="s-whatsapp" href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">{SOCIAL_SVG['WhatsApp']}</a></div></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
@@ -389,7 +389,7 @@ def root_files():
 <link rel="canonical" href="{D}/">{alts}<link rel="alternate" hreflang="x-default" href="{D}/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="static/style.css?v={VER['css']}">{ld(org_ld('tr'))}
 <script>(function(){{try{{if(location.search.indexOf('stay')>-1||sessionStorage.getItem('mt-stay'))return;var L=['tr','en','de','fr','ar'],n=(navigator.languages||[navigator.language||'tr']);for(var i=0;i<n.length;i++){{var c=(n[i]||'').slice(0,2).toLowerCase();if(L.indexOf(c)>-1){{location.replace(c+'/{tail()}');return}}}}location.replace('en/{tail()}')}}catch(e){{}}}})();</script>
-</head><body><main class="chooser"><div><a class="logo" href="./">{LOGO}<span>MET<b>URSAN</b></span></a>
+</head><body><main class="chooser"><div><a class="logo" href="./">{LOGO}<span>MET<b>UR</b><i>SAN</i></span></a>
 <p style="margin-top:14px;color:var(--mute)">Metal kabin, pano ve kiosk imalatı · Metal enclosures, panels and kiosks</p>
 <div class="list">{links}</div></div></main></body></html>""")
     # 404 (Türkçe + dil bağlantıları)

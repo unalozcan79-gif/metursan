@@ -53,7 +53,7 @@ def build(L, X):
     total = pg
     def foot(n, label=""):
         return f'<div class="pf"><span>{e(label)}</span><span dir="ltr">metursan.com</span><span>{e(K["page"])} {n}</span></div>'
-    logo = lambda cls="": f'<div class="klogo {cls}">{X["MARK"]}<div><b dir="ltr">MET<i>URSAN</i></b><small>{e(K["tagline"])}</small></div></div>'
+    logo = lambda cls="": f'<div class="klogo {cls}">{X["MARK"]}<div><b dir="ltr">MET<i>UR</i><u>SAN</u></b><small>{e(K["tagline"])}</small></div></div>'
     pages = []
     # 1) kapak
     covers = "".join(f'<figure><img src="{img(c["cover"], 700)}" alt="{e(ct(c, L)[0])}"><figcaption>{e(ct(c, L)[0])}</figcaption></figure>' for c in CATS[:4])
