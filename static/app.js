@@ -24,7 +24,7 @@
   /* galeri */
   const main = $("#pdimg");
   $$(".pd-gal .thumbs button").forEach(b => b.addEventListener("click", () => {
-    main.src = b.dataset.src; $$(".pd-gal .thumbs button").forEach(x => x.setAttribute("aria-current", x === b));
+    main.src = b.dataset.src; if (b.dataset.alt) main.alt = b.dataset.alt; $$(".pd-gal .thumbs button").forEach(x => x.setAttribute("aria-current", x === b));
   }));
 
   /* normalizasyon: küçük harf, aksan/hareke kaldırma, harf+rakam (tüm alfabeler) */

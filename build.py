@@ -52,7 +52,13 @@ def ct(c, L):  # kategori metni
 def pt(p, L):  # ürün metni
     return p["tr"] if L == "tr" else M[L].PRODS[p["slug"]]
 
+IMGMAP = json.load(open(os.path.join(BASE, "static", "img", "kaynak-eslesme.json"), encoding="utf-8")) if os.path.exists(os.path.join(BASE, "static", "img", "kaynak-eslesme.json")) else {}
+PHOTO = {"tr": "fotoğraf", "en": "photo", "de": "Foto", "fr": "photo", "ar": "صورة"}
+def alt_txt(L, name, short, i=1, n=1):
+    """Fotoğraf açıklaması (alt metni): ürün adı + kısa açıklama + sıra, her dilde"""
+    return f"{name} – {short.rstrip('.')} · Metursan" + (f" ({PHOTO[L]} {i}/{n})" if n > 1 else "")
 def img(path, w=800):
+    path = IMGMAP.get(path, path)
     src = D + path if path.startswith("/") else UP + path   # "/static/img/..." = kendi deponuzdaki fotoğraf
     return "https://wsrv.nl/?url=" + quote(src, safe="") + f"&w={w}&output=webp&q=82"
 
@@ -190,7 +196,7 @@ def card(g, p, eb=None, w=640):
     n, s = pt(p, g.L)[:2]
     return (f'<a class="st-card st-sm" href="{g.h(p["cat"], p["slug"])}"><div class="tx"><span class="eb" dir="ltr">{e(eb or p["code"])}</span>'
             f'<h3>{e(n)}</h3><p class="pr">{e(s)}</p></div>'
-            f'<img src="{img(p["imgs"][0], w)}" alt="{e(n)}" loading="lazy" decoding="async" width="{w}" height="{int(w*.75)}"></a>')
+            f'<img src="{img(p["imgs"][0], w)}" alt="{e(alt_txt(g.L, n, s))}" loading="lazy" decoding="async" width="{w}" height="{int(w*.75)}"></a>')
 
 def row(inner, pads=True):
     pd = '<div class="wrap st-pads"><button class="st-pad" data-dir="-1" aria-label="‹">‹</button><button class="st-pad" data-dir="1" aria-label="›">›</button></div>' if pads else ""
@@ -292,7 +298,7 @@ def page_prod(L, p):
     cname, _, _, cfaq = ct(c, L)
     name, short, feats, uses, about = pt(p, L)
     main = p["imgs"][0]
-    thumbs = "".join(f'<button type="button" data-src="{img(x, 1200)}"{" aria-current=true" if i == 0 else ""} aria-label="{i+1}"><img src="{img(x, 200)}" alt="" loading="lazy" width="84" height="64"></button>' for i, x in enumerate(p["imgs"])) if len(p["imgs"]) > 1 else ""
+    thumbs = "".join(f'<button type="button" data-src="{img(x, 1200)}"{" aria-current=true" if i == 0 else ""} aria-label="{e(alt_txt(L, name, short, i + 1, len(p["imgs"])))}" data-alt="{e(alt_txt(L, name, short, i + 1, len(p["imgs"])))}"><img src="{img(x, 200)}" alt="" loading="lazy" width="84" height="64"></button>' for i, x in enumerate(p["imgs"])) if len(p["imgs"]) > 1 else ""
     fl = "".join(f"<li>{e(f)}</li>" for f in list(feats) + [T["feat_x"]])
     ul = "".join(f"<li>{e(u)}</li>" for u in uses)
     tl = "".join(f"<li>{e(x)}</li>" for x in T["tech_l"])
@@ -303,7 +309,7 @@ def page_prod(L, p):
     qa = [(F(T["pq1"], **kw), F(T["pa1"], **kw)), (F(T["pq2"], **kw), F(T["pa2"], **kw))] + list(cfaq[:2])
     body = f"""<div class="st">{crumbs(g, [(T['home'], g.h()), (T['nav_products'], g.h('urunler')), (cname, g.h(c['slug'])), (name, '')])}
 <div class="wrap"><article class="pd">
-<div class="pd-gal"><div class="pd-main"><img id="pdimg" src="{img(main, 1200)}" alt="{e(name)}" width="1200" height="900" fetchpriority="high"></div><div class="thumbs">{thumbs}</div></div>
+<div class="pd-gal"><div class="pd-main"><img id="pdimg" src="{img(main, 1200)}" alt="{e(alt_txt(L, name, short, 1, len(p["imgs"])))}" width="1200" height="900" fetchpriority="high"></div><div class="thumbs">{thumbs}</div></div>
 <div class="pd-info"><a class="pd-eb" href="{g.h(c['slug'])}">{e(cname)}</a><h1>{e(name)}</h1><p class="pd-code">{e(T['code'])}: <span dir="ltr">{p['code']}</span></p><p class="pd-sum">{e(short)}</p>
 <div class="pd-box"><b>{e(T['mtm_b'])}</b><span>{e(T['mtm_s'])}</span></div>
 <div class="pd-btns"><a class="btn btn-p" href="{wa(F(T['wa_prod'], **kw))}" target="_blank" rel="noopener">{e(T['p_quote'])}</a><a class="btn btn-s" href="tel:{SITE['tel']}">{e(T['p_call'])}</a><button class="btn btn-s" data-ai="{e(name)}">{e(T['p_ai'])}</button></div>
@@ -318,7 +324,7 @@ def page_prod(L, p):
 {sec(T['same_cat'], row("".join(card(g, x) for x in rel[:12])), link=(g.h(c['slug']), T['see_all']))}
 </div>"""
     # Fiyat yayımlanmadığı için Product yerine Service (ölçüye özel imalat): Google "ürün snippet'i" hatası üretmez, bilgi korunur
-    prod_ld = {"@context": "https://schema.org", "@type": "Service", "serviceType": cname, "name": name, "description": short + " " + about, "image": [img(x, 1200) for x in p["imgs"]],
+    prod_ld = {"@context": "https://schema.org", "@type": "Service", "serviceType": cname, "name": name, "description": short + " " + about, "image": [{"@type": "ImageObject", "contentUrl": D + IMGMAP.get(x, x) if (IMGMAP.get(x, x)).startswith("/") else UP + x, "url": img(x, 1200), "caption": alt_txt(L, name, short, i + 1, len(p["imgs"])), "creditText": "Metursan"} for i, x in enumerate(p["imgs"])],
                "category": cname, "url": g.url(c["slug"], p["slug"]), "inLanguage": L, "identifier": p["code"], "brand": {"@type": "Brand", "name": "Metursan"},
                "provider": {"@id": D + "/#org"}, "areaServed": ["TR", "EU", "Middle East"],
                "additionalProperty": [{"@type": "PropertyValue", "name": T["mtm_b"], "value": "true"}] + [{"@type": "PropertyValue", "name": T["feats"], "value": f} for f in feats] +
