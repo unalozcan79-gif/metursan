@@ -6,7 +6,8 @@ python3 build.py --files  -> dist_preview/ (…/index.html linkleri, dosya öniz
 import json, os, re, hashlib, shutil, sys, html, importlib
 from urllib.parse import quote, unquote
 from datetime import date
-from data import SITE, CATEGORIES, P, SOCIAL
+from data import SITE, CATEGORIES, P, SOCIAL, SOCIAL_OLD
+OLD_H = {'tr': 'Diğer hesaplarımız', 'en': 'Our other accounts', 'de': 'Weitere Konten', 'fr': 'Nos autres comptes', 'ar': 'حساباتنا الأخرى'}
 
 PRETTY = "--files" not in sys.argv
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -80,6 +81,7 @@ SOCIAL_SVG = {
  'X': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.8 3h3l-6.6 7.6L22 21h-6.1l-4.8-6.3L5.6 21h-3l7.1-8.1L2.3 3h6.2l4.3 5.7zm-1 16.2h1.7L7.3 4.7H5.5z"/></svg>',
  'YouTube': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15.1V8.9l5.2 3.1z"/></svg>',
  'LinkedIn': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg>',
+ 'TikTok': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 3c.3 2.2 1.6 3.7 3.9 3.9v2.6c-1.4.1-2.7-.3-3.9-1.1v5.6c0 3.6-2.6 6-5.9 6-3.2 0-5.7-2.5-5.7-5.6 0-3.4 2.9-6 6.6-5.5v2.7c-1.8-.4-3.6.8-3.6 2.7 0 1.6 1.3 2.8 2.8 2.8 1.6 0 2.8-1.1 2.8-3.1V3h3z"/></svg>',
  'WhatsApp': CHAT,
 }
 SOCIAL_SVG = {k: v.replace('<svg viewBox="0 0 24 24"', '<svg width="18" height="18" viewBox="0 0 24 24"', 1) for k, v in SOCIAL_SVG.items()}
@@ -119,7 +121,7 @@ def org_ld(L):
             "url": D + "/", "logo": D + "/static/logo/metursan-logo-512.png", "foundingDate": SITE["founded"], "email": SITE["email"], "telephone": SITE["phone1"],
             "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "postalCode": SITE["postal"], "addressLocality": "Sancaktepe", "addressRegion": "İstanbul", "addressCountry": "TR"},
             "contactPoint": [{"@type": "ContactPoint", "telephone": SITE["phone1"], "contactType": "sales", "availableLanguage": ["tr", "en", "de", "fr", "ar"]}],
-            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/"] + [u for _, _, u, _ in SOCIAL]}
+            "areaServed": ["TR", "EU", "MENA"], "sameAs": ["https://www.huzurpano.com/"] + [u for _, _, u, _ in SOCIAL] + [u for _, u in SOCIAL_OLD]}
 
 def ld(o): return '<script type="application/ld+json">' + json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "</script>"
 def crumbs_ld(items): return ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]})
@@ -184,7 +186,7 @@ def foot(g):
 <div class="fgrid">
  <div><a class="logo" href="{g.h()}">{LOGO}<span class="lg-t" dir="ltr"><span>MET<b>UR</b><i>SAN</i></span><small>Metal Üretim Sanayi</small></span></a>
  <p style="margin-top:12px;max-width:320px">{e(F(T['f_about'], **CTX))}</p>
- <div class="social">{"".join(f'<a class="s-{t}" href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{SOCIAL_SVG[k]}</a>' for n, t, u, k in SOCIAL)}<a class="s-whatsapp" href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">{SOCIAL_SVG['WhatsApp']}</a></div></div>
+ <div class="social">{"".join(f'<a class="s-{t}" href="{u}" aria-label="{n}" title="{n}" rel="noopener me" target="_blank">{SOCIAL_SVG[k]}</a>' for n, t, u, k in SOCIAL)}<a class="s-whatsapp" href="https://wa.me/{SITE['whatsapp']}" aria-label="WhatsApp" title="WhatsApp" rel="noopener" target="_blank">{SOCIAL_SVG['WhatsApp']}</a></div><p class="social-old">{e(OLD_H[g.L])}: {' · '.join(f'<a href="{u}" target="_blank" rel="noopener">{n}</a>' for n, u in SOCIAL_OLD)}</p></div>
  <div><h2>{e(T['nav_products'])}</h2><ul>{cats}<li><a href="{g.h('urunler')}">{e(T['all'])}</a></li></ul></div>
  <div><h2>{e(T['nav_services'])}</h2><ul>{srv}</ul></div>
  <div><h2>{e(T['nav_contact'])}</h2><ul><li><a href="tel:{SITE['tel']}" dir="ltr">{SITE['phone1']}</a></li><li><a href="https://wa.me/{SITE['whatsapp']}">WhatsApp <span dir="ltr">{SITE['whatsapp_display']}</span></a></li><li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li><li>{e(SITE['street'])}, {SITE['postal']} {e(SITE['city'])}</li><li><a href="{g.h('katalog')}">{e(KAT[g.L]['title'])} (PDF)</a></li><li><a href="{g.A}llms.txt">{e(T['f_llms'])}</a></li></ul></div>

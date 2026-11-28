@@ -482,9 +482,16 @@ SERVICES = [
 
 # Sosyal medya (alt kısım + arama motorları için kurum bilgisi)
 SOCIAL = [
-    ("Instagram", "instagram", "https://www.instagram.com/huzurpanostore/", "Instagram"),
-    ("Facebook", "facebook", "https://www.facebook.com/HuzurPanoStore", "Facebook"),
-    ("YouTube", "youtube", "https://www.youtube.com/@huzur_pano", "YouTube"),
-    ("LinkedIn", "linkedin", "https://www.linkedin.com/company/huzurpano", "LinkedIn"),
-    ("X (Twitter)", "x", "https://twitter.com/huzurpano1", "X"),
+    ("Instagram", "instagram", "https://www.instagram.com/metursan/", "Instagram"),
+    ("YouTube", "youtube", "https://www.youtube.com/@metursan", "YouTube"),
+    ("LinkedIn", "linkedin", "https://www.linkedin.com/company/metursan", "LinkedIn"),
+    ("TikTok", "tiktok", "https://www.tiktok.com/@metursan", "TikTok"),
+]
+# Eski hesaplar (Huzur Pano) — alt bilgide küçük satırda kalır
+SOCIAL_OLD = [
+    ("Instagram", "https://www.instagram.com/huzurpanostore/"),
+    ("Facebook", "https://www.facebook.com/HuzurPanoStore"),
+    ("YouTube", "https://www.youtube.com/@huzur_pano"),
+    ("LinkedIn", "https://www.linkedin.com/company/huzurpano"),
+    ("X", "https://twitter.com/huzurpano1"),
 ]
